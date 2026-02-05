@@ -1,17 +1,418 @@
+"use client";
+
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Hexagon,
   Upload,
-  Users,
+  Heart,
   Sparkles,
   ArrowRight,
-  Heart,
-  Infinity,
-  Zap,
+  Copy,
+  Check,
+  RefreshCw,
+  Download,
+  X,
 } from "lucide-react";
 
-export default function LandingPage() {
+// Simple variation patterns - no heavy processing
+const VARIATION_STYLES = [
+  { name: "Direct Truth", hookPrefix: "", style: "raw" },
+  { name: "Gentle Invitation", hookPrefix: "What if ", style: "soft" },
+  { name: "Pattern Interrupt", hookPrefix: "Stop. ", style: "bold" },
+  { name: "Question Entry", hookPrefix: "Have you ever ", style: "curious" },
+  { name: "Bold Declaration", hookPrefix: "This is ", style: "strong" },
+];
+
+function generateVariation(content: string, index: number) {
+  const style = VARIATION_STYLES[index % VARIATION_STYLES.length];
+  const lines = content.split(/[.!?]+/).filter(Boolean);
+  const firstLine = lines[0]?.trim() || content.substring(0, 50);
+  
+  const hooks: Record<string, string> = {
+    raw: firstLine,
+    soft: `${style.hookPrefix}${firstLine.toLowerCase()}...`,
+    bold: `${style.hookPrefix}${firstLine}`,
+    curious: `${style.hookPrefix}felt this? ${firstLine}`,
+    strong: `${style.hookPrefix}what matters: ${firstLine}`,
+  };
+
+  const hashtags = [
+    "#truth", "#conscious", "#authentic", "#presence", "#awakening"
+  ];
+
+  return {
+    name: style.name,
+    hook: hooks[style.style],
+    caption: content,
+    hashtags: hashtags.slice(0, 3 + (index % 2)),
+  };
+}
+
+export default function HomePage() {
+  const [mode, setMode] = useState<"landing" | "express">("landing");
+  const [file, setFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [expression, setExpression] = useState("");
+  const [variation, setVariation] = useState<ReturnType<typeof generateVariation> | null>(null);
+  const [variationIndex, setVariationIndex] = useState(0);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (selected) {
+      setFile(selected);
+      setFilePreview(URL.createObjectURL(selected));
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const dropped = e.dataTransfer.files[0];
+    if (dropped) {
+      setFile(dropped);
+      setFilePreview(URL.createObjectURL(dropped));
+    }
+  };
+
+  const emitSignal = () => {
+    if (!expression.trim()) return;
+    setIsProcessing(true);
+    
+    // Small delay for feel, then generate locally
+    setTimeout(() => {
+      const v = generateVariation(expression, variationIndex);
+      setVariation(v);
+      setIsProcessing(false);
+    }, 400);
+  };
+
+  const tryAnother = () => {
+    const nextIndex = (variationIndex + 1) % VARIATION_STYLES.length;
+    setVariationIndex(nextIndex);
+    const v = generateVariation(expression, nextIndex);
+    setVariation(v);
+  };
+
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      // Fallback
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    }
+  };
+
+  const reset = () => {
+    setFile(null);
+    setFilePreview(null);
+    setExpression("");
+    setVariation(null);
+    setVariationIndex(0);
+    setMode("landing");
+  };
+
+  // Express Mode - Signal into the Field
+  if (mode === "express") {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Minimal header */}
+        <header className="border-b border-border">
+          <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+            <button onClick={reset} className="flex items-center gap-2">
+              <Hexagon className="h-6 w-6 text-primary" strokeWidth={1.5} />
+              <span className="font-serif text-lg text-foreground">Signal Portal</span>
+            </button>
+            <Button variant="ghost" size="sm" onClick={reset}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </header>
+
+        <main className="mx-auto max-w-2xl px-6 py-12 md:py-20">
+          {/* Before variation is generated */}
+          {!variation && (
+            <div className="space-y-10">
+              <div className="text-center">
+                <h1 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
+                  Emit Your Signal
+                </h1>
+                <p className="mt-3 text-muted-foreground">
+                  No login required. Drop your truth and see how it resonates.
+                </p>
+              </div>
+
+              {/* File upload area */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                className="cursor-pointer rounded-2xl border-2 border-dashed border-border bg-card p-8 text-center transition-colors hover:border-primary/50 hover:bg-card/80"
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="video/*,image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                
+                {filePreview ? (
+                  <div className="space-y-4">
+                    {file?.type.startsWith("video") ? (
+                      <video
+                        src={filePreview}
+                        className="mx-auto max-h-64 rounded-xl"
+                        controls={false}
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <img
+                        src={filePreview}
+                        alt="Preview"
+                        className="mx-auto max-h-64 rounded-xl object-contain"
+                      />
+                    )}
+                    <p className="text-sm text-muted-foreground">{file?.name}</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <Upload className="mx-auto h-10 w-10 text-muted-foreground" />
+                    <p className="text-foreground">Drop your content here</p>
+                    <p className="text-sm text-muted-foreground">
+                      Video or image (optional)
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Expression textarea */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-foreground">
+                  What is this expressing?
+                </label>
+                <Textarea
+                  value={expression}
+                  onChange={(e) => setExpression(e.target.value)}
+                  placeholder="Share the essence of what you want to communicate..."
+                  className="min-h-32 resize-none rounded-xl border-border bg-card text-base"
+                />
+              </div>
+
+              {/* Emit button */}
+              <Button
+                onClick={emitSignal}
+                disabled={!expression.trim() || isProcessing}
+                className="h-14 w-full rounded-xl text-lg"
+              >
+                {isProcessing ? (
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 animate-pulse" />
+                    Sensing resonance...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    Emit Signal
+                  </span>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {/* After variation is generated */}
+          {variation && (
+            <div className="space-y-10">
+              <div className="text-center">
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">
+                  <Sparkles className="h-4 w-4" />
+                  {variation.name}
+                </div>
+                <h2 className="font-serif text-2xl font-semibold text-foreground">
+                  Your Signal, Refined
+                </h2>
+              </div>
+
+              {/* Preview with file */}
+              {filePreview && (
+                <div className="overflow-hidden rounded-2xl border border-border bg-card">
+                  {file?.type.startsWith("video") ? (
+                    <video
+                      src={filePreview}
+                      className="w-full"
+                      controls
+                      playsInline
+                    />
+                  ) : (
+                    <img
+                      src={filePreview}
+                      alt="Your content"
+                      className="w-full object-contain"
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Hook */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">Opening Hook</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(variation.hook, "hook")}
+                  >
+                    {copied === "hook" ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <p className="text-lg font-medium text-foreground">{variation.hook}</p>
+                </div>
+              </div>
+
+              {/* Caption */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">Caption</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(variation.caption, "caption")}
+                  >
+                    {copied === "caption" ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <p className="whitespace-pre-wrap text-foreground">{variation.caption}</p>
+                </div>
+              </div>
+
+              {/* Hashtags */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">Hashtags</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(variation.hashtags.join(" "), "hashtags")}
+                  >
+                    {copied === "hashtags" ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {variation.hashtags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button
+                  variant="outline"
+                  onClick={tryAnother}
+                  className="h-12 flex-1 rounded-xl bg-transparent"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Try Another Style
+                </Button>
+                <Button
+                  onClick={() =>
+                    copyToClipboard(
+                      `${variation.hook}\n\n${variation.caption}\n\n${variation.hashtags.join(" ")}`,
+                      "all"
+                    )
+                  }
+                  className="h-12 flex-1 rounded-xl"
+                >
+                  {copied === "all" ? (
+                    <>
+                      <Check className="mr-2 h-4 w-4" />
+                      Copied Everything
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-2 h-4 w-4" />
+                      Copy All
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Download if file exists */}
+              {filePreview && file && (
+                <a
+                  href={filePreview}
+                  download={file.name}
+                  className="block"
+                >
+                  <Button variant="outline" className="h-12 w-full rounded-xl bg-transparent">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Content
+                  </Button>
+                </a>
+              )}
+
+              {/* CTA to join */}
+              <div className="rounded-2xl border border-border bg-card/50 p-6 text-center">
+                <p className="text-muted-foreground">
+                  Want automated distribution across all platforms?
+                </p>
+                <Link href="/auth/initiate" className="mt-3 inline-block">
+                  <Button variant="link" className="text-primary">
+                    Join the field
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Start over */}
+              <Button
+                variant="ghost"
+                onClick={reset}
+                className="w-full text-muted-foreground"
+              >
+                Start Over
+              </Button>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  }
+
+  // Landing Mode
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -55,9 +456,6 @@ export default function LandingPage() {
                 Sign In
               </Button>
             </Link>
-            <Link href="/auth/initiate">
-              <Button className="h-11 rounded-xl px-5">Begin</Button>
-            </Link>
           </div>
         </nav>
 
@@ -69,227 +467,98 @@ export default function LandingPage() {
           </div>
 
           <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-6xl md:leading-tight text-balance">
-            Where Conscious Creators{" "}
-            <span className="text-primary">Thrive Together</span>
+            Emit Your Signal{" "}
+            <span className="text-primary">Into the Field</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl text-balance">
-            A unified field for artists, leaders, healers, and visionaries. Upload your 
-            raw expression, and let our living system distribute your authentic signal 
-            across all platforms — while you stay focused on your purpose.
+            No account needed. Drop your raw expression, see how it resonates, 
+            and receive optimized variations ready to share across all platforms.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button
+              size="lg"
+              className="h-14 w-full rounded-xl px-8 text-base sm:w-auto"
+              onClick={() => setMode("express")}
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Try It Now
+            </Button>
             <Link href="/auth/initiate">
-              <Button size="lg" className="h-14 w-full rounded-xl px-8 text-base sm:w-auto">
-                Begin Your Initiation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="#how-it-works">
               <Button
                 variant="outline"
                 size="lg"
                 className="h-14 w-full rounded-xl px-8 text-base sm:w-auto bg-transparent"
               >
-                See How It Works
+                Join the Collective
               </Button>
             </Link>
           </div>
+
+          <p className="mt-6 text-sm text-muted-foreground">
+            Free to use. No login required.
+          </p>
         </div>
       </header>
 
-      {/* Principles Section */}
+      {/* Simple How It Works */}
       <section className="border-y border-border bg-card/50 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-4xl px-6">
           <div className="mb-12 text-center">
             <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
-              Built on Living Principles
+              Simple as Breathing
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              This is not another hustle-culture tool. It is a support system aligned with truth.
-            </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Heart className="h-6 w-6 text-primary" />
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Upload className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Service, Not Extraction
+                1. Drop Content
               </h3>
               <p className="text-muted-foreground">
-                We serve you because we are you. The platform succeeds when its creators 
-                thrive. No manipulation, no addiction loops — just genuine support.
+                Upload a video or image, describe what it expresses
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Infinity className="h-6 w-6 text-primary" />
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Sparkles className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Unified Consciousness
+                2. Receive Variations
               </h3>
               <p className="text-muted-foreground">
-                Everything is infinite consciousness expressing itself. Our algorithm 
-                recognizes this — surfacing synchronicities and resonant connections.
+                See your truth refined with hooks, captions, and hashtags
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Zap className="h-6 w-6 text-primary" />
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Heart className="h-7 w-7 text-primary" />
               </div>
               <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Honesty of Experience
+                3. Share Freely
               </h3>
               <p className="text-muted-foreground">
-                Our integrity algorithm distinguishes emotional expression from actionable 
-                preference — honoring your feelings without misinterpreting them.
+                Copy and post to any platform. Your essence, amplified.
               </p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
-              How the Portal Works
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              You create. The unified system handles the rest.
-            </p>
+          <div className="mt-12 text-center">
+            <Button
+              size="lg"
+              className="h-14 rounded-xl px-10 text-base"
+              onClick={() => setMode("express")}
+            >
+              Emit Your Signal
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
-
-          <div className="grid gap-6 md:grid-cols-4">
-            {[
-              {
-                step: 1,
-                icon: Upload,
-                title: "Upload Raw Content",
-                description:
-                  "Drop your videos, audio, or images into the portal. No editing required.",
-              },
-              {
-                step: 2,
-                icon: Sparkles,
-                title: "AI Transformation",
-                description:
-                  "Our conscious engine optimizes your content for each platform while preserving your authentic signal.",
-              },
-              {
-                step: 3,
-                icon: Zap,
-                title: "Automated Distribution",
-                description:
-                  "Content flows to Instagram, TikTok, and beyond at optimal times. You set preferences once.",
-              },
-              {
-                step: 4,
-                icon: Users,
-                title: "Community Resonance",
-                description:
-                  "Connect with aligned creators. The field surfaces synchronicities and meaningful connections.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-lg font-medium text-primary-foreground">
-                    {item.step}
-                  </div>
-                  {item.step < 4 && (
-                    <div className="hidden h-0.5 flex-1 bg-border md:block" />
-                  )}
-                </div>
-                <div className="rounded-xl border border-border bg-card p-6">
-                  <item.icon className="mb-3 h-6 w-6 text-primary" />
-                  <h3 className="mb-2 font-medium text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Creator Spaces Preview */}
-      <section className="border-y border-border bg-card/50 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid items-center gap-12 md:grid-cols-2">
-            <div>
-              <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl text-balance">
-                Build Your Space, Share Your Gifts
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                Create your own corner of the collective — with courses, 1:1 sessions, 
-                memberships, and community. Be financially supported while doing what 
-                you love.
-              </p>
-              <ul className="mt-8 space-y-4">
-                {[
-                  "Courses and digital offerings",
-                  "1:1 sessions with integrated booking",
-                  "Community spaces and memberships",
-                  "Coherence score visibility — authenticity as currency",
-                ].map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-primary/20 p-1">
-                      <div className="h-full w-full rounded-full bg-primary" />
-                    </div>
-                    <span className="text-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8">
-                <Link href="/auth/initiate">
-                  <Button className="h-12 rounded-xl px-6">
-                    Create Your Space
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="aspect-[4/3] rounded-xl bg-muted/50 flex items-center justify-center">
-                <div className="text-center">
-                  <Hexagon className="mx-auto h-16 w-16 text-primary/30" strokeWidth={1} />
-                  <p className="mt-4 text-sm text-muted-foreground">
-                    Creator Space Preview
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <Hexagon className="mx-auto mb-6 h-16 w-16 text-primary" strokeWidth={1} />
-          <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl text-balance">
-            Ready to Plug Into the Field?
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground text-balance">
-            Join conscious creators who are being held in their expression, financially 
-            supported, and connected through a system that serves truth.
-          </p>
-          <div className="mt-8">
-            <Link href="/auth/initiate">
-              <Button size="lg" className="h-14 rounded-xl px-10 text-base">
-                Begin Your Initiation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Free tier available. No credit card required.
-          </p>
         </div>
       </section>
 
