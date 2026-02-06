@@ -1,307 +1,219 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Hexagon,
-  Upload,
-  Users,
-  Sparkles,
-  ArrowRight,
-  Heart,
-  Infinity,
-  Zap,
-} from "lucide-react";
 
-export default function LandingPage() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/20 -z-10" />
+      
       {/* Hero Section */}
-      <header className="relative overflow-hidden">
-        {/* Sacred geometry background */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.03]">
-          <div className="absolute left-1/2 top-1/2 h-[1200px] w-[1200px] -translate-x-1/2 -translate-y-1/2">
-            <svg viewBox="0 0 400 400" className="h-full w-full">
-              <circle cx="200" cy="200" r="190" fill="none" stroke="currentColor" strokeWidth="0.3" />
-              <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth="0.3" />
-              <circle cx="200" cy="200" r="110" fill="none" stroke="currentColor" strokeWidth="0.3" />
-              <circle cx="200" cy="200" r="70" fill="none" stroke="currentColor" strokeWidth="0.3" />
-              <circle cx="200" cy="200" r="30" fill="none" stroke="currentColor" strokeWidth="0.3" />
-              {[0, 30, 60, 90, 120, 150].map((angle) => (
-                <line
-                  key={angle}
-                  x1="200"
-                  y1="10"
-                  x2="200"
-                  y2="390"
-                  stroke="currentColor"
-                  strokeWidth="0.3"
-                  transform={`rotate(${angle} 200 200)`}
-                />
-              ))}
-            </svg>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          <div className="flex items-center gap-3">
-            <Hexagon className="h-8 w-8 text-primary" strokeWidth={1.5} />
-            <span className="font-serif text-xl font-medium text-foreground">
-              The Purpose Initiation
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/portal">
-              <Button className="h-11 rounded-xl px-6">Enter the Collective</Button>
-            </Link>
-          </div>
-        </nav>
-
-        {/* Hero content */}
-        <div className="relative mx-auto max-w-4xl px-6 pb-24 pt-16 text-center md:pb-32 md:pt-24">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground">
-            <Heart className="h-4 w-4 text-primary" />
-            <span>A platform built on love, truth, and service</span>
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-12">
+        <div className="max-w-5xl mx-auto text-center space-y-8">
+          {/* Main headline */}
+          <div className="space-y-4">
+            <p className="text-sm md:text-base text-muted-foreground uppercase tracking-widest">
+              into what's holding you back
+            </p>
+            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance">
+              THE PURPOSE
+              <br />
+              <span className="text-primary">INITIATION</span>
+            </h1>
           </div>
 
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-6xl md:leading-tight text-balance">
-            Where Conscious Creators{" "}
-            <span className="text-primary">Thrive Together</span>
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl text-balance">
-            A unified field for artists, leaders, healers, and visionaries. Upload your 
-            raw expression, and let our living system distribute your authentic signal 
-            across all platforms — while you stay focused on your purpose.
-          </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/portal">
-              <Button size="lg" className="h-14 w-full rounded-xl px-8 text-base sm:w-auto">
-                Enter the Collective
-                <ArrowRight className="ml-2 h-5 w-5" />
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+            <Link href="#transformation">
+              <Button size="lg" className="h-14 px-8 text-base rounded-xl min-w-[220px]">
+                Start Your Transformation
               </Button>
             </Link>
-            <Link href="#how-it-works">
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-14 w-full rounded-xl px-8 text-base sm:w-auto bg-transparent"
+            <Link href="/matrix">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="h-14 px-8 text-base rounded-xl min-w-[220px] bg-transparent border-primary/50 hover:bg-primary/10"
               >
-                See How It Works
+                EXIT MATRIX
               </Button>
             </Link>
           </div>
-        </div>
-      </header>
 
-      {/* Principles Section */}
-      <section className="border-y border-border bg-card/50 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
-              Built on Living Principles
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              This is not another hustle-culture tool. It is a support system aligned with truth.
+          {/* Subheading */}
+          <div className="pt-12 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-balance">
+              Emitting a signal so clean that everything falls under one and the same category:
+            </p>
+            <p className="text-xl md:text-2xl font-medium mt-6 text-balance">
+              We do that by breaking the matrix of illusory paradigms
+            </p>
+            <p className="text-lg md:text-xl text-muted-foreground mt-4 text-balance">
+              Come. Let's break it together
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Heart className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Service, Not Extraction
-              </h3>
-              <p className="text-muted-foreground">
-                We serve you because we are you. The platform succeeds when its creators 
-                thrive. No manipulation, no addiction loops — just genuine support.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Infinity className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Unified Consciousness
-              </h3>
-              <p className="text-muted-foreground">
-                Everything is infinite consciousness expressing itself. Our algorithm 
-                recognizes this — surfacing synchronicities and resonant connections.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Zap className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="mb-2 font-serif text-xl font-medium text-foreground">
-                Honesty of Experience
-              </h3>
-              <p className="text-muted-foreground">
-                Our integrity algorithm distinguishes emotional expression from actionable 
-                preference — honoring your feelings without misinterpreting them.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" className="py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
-              How the Portal Works
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              You create. The unified system handles the rest.
+          <div className="pt-8">
+            <p className="text-base md:text-lg text-foreground font-medium">
+              You who are ready for radical ownership of what you want
+            </p>
+            <p className="text-base md:text-lg text-foreground font-medium mt-2">
+              And to stop lying to yourself
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-4">
-            {[
-              {
-                step: 1,
-                icon: Upload,
-                title: "Upload Raw Content",
-                description:
-                  "Drop your videos, audio, or images into the portal. No editing required.",
-              },
-              {
-                step: 2,
-                icon: Sparkles,
-                title: "AI Transformation",
-                description:
-                  "Our conscious engine optimizes your content for each platform while preserving your authentic signal.",
-              },
-              {
-                step: 3,
-                icon: Zap,
-                title: "Automated Distribution",
-                description:
-                  "Content flows to Instagram, TikTok, and beyond at optimal times. You set preferences once.",
-              },
-              {
-                step: 4,
-                icon: Users,
-                title: "Community Resonance",
-                description:
-                  "Connect with aligned creators. The field surfaces synchronicities and meaningful connections.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-lg font-medium text-primary-foreground">
-                    {item.step}
-                  </div>
-                  {item.step < 4 && (
-                    <div className="hidden h-0.5 flex-1 bg-border md:block" />
-                  )}
-                </div>
-                <div className="rounded-xl border border-border bg-card p-6">
-                  <item.icon className="mb-3 h-6 w-6 text-primary" />
-                  <h3 className="mb-2 font-medium text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              </div>
-            ))}
+          <div className="pt-4">
+            <Button size="lg" variant="outline" className="h-12 px-8 rounded-xl">
+              Book Your Call
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Creator Spaces Preview */}
-      <section className="border-y border-border bg-card/50 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid items-center gap-12 md:grid-cols-2">
-            <div>
-              <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl text-balance">
-                Build Your Space, Share Your Gifts
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                Create your own corner of the collective — with courses, 1:1 sessions, 
-                memberships, and community. Be financially supported while doing what 
-                you love.
+      {/* The Journey - 4 Phases */}
+      <section id="transformation" className="py-24 px-6 border-t border-border">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Phase 01 */}
+            <div className="space-y-4">
+              <div className="text-4xl font-bold text-primary/60">01</div>
+              <h3 className="font-serif text-2xl font-semibold">The First Shift</h3>
+              <p className="text-xl font-medium text-primary">Clarity Breaks Through</p>
+              <p className="text-muted-foreground leading-relaxed">
+                "I finally know what I actually want."
               </p>
-              <ul className="mt-8 space-y-4">
-                {[
-                  "Courses and digital offerings",
-                  "1:1 sessions with integrated booking",
-                  "Community spaces and memberships",
-                  "Coherence score visibility — authenticity as currency",
-                ].map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-primary/20 p-1">
-                      <div className="h-full w-full rounded-full bg-primary" />
-                    </div>
-                    <span className="text-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8">
-                <Link href="/portal">
-                  <Button className="h-12 rounded-xl px-6">
-                    Explore Spaces
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
             </div>
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <div className="aspect-[4/3] rounded-xl bg-muted/50 flex items-center justify-center">
-                <div className="text-center">
-                  <Hexagon className="mx-auto h-16 w-16 text-primary/30" strokeWidth={1} />
-                  <p className="mt-4 text-sm text-muted-foreground">
-                    Creator Space Preview
-                  </p>
-                </div>
-              </div>
+
+            {/* Phase 02 */}
+            <div className="space-y-4">
+              <div className="text-4xl font-bold text-primary/60">02</div>
+              <h3 className="font-serif text-2xl font-semibold">Fear Activated</h3>
+              <p className="text-xl font-medium text-primary">The Threshold</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Fear of letting go of the old identity. Fear that honoring truth will require changing everything.
+              </p>
             </div>
+
+            {/* Phase 03 */}
+            <div className="space-y-4">
+              <div className="text-4xl font-bold text-primary/60">03</div>
+              <h3 className="font-serif text-2xl font-semibold">The Embodiment Phase</h3>
+              <p className="text-xl font-medium text-primary">Expression → Embodiment</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Truth becomes a lived reality instead of a hidden idea.
+              </p>
+            </div>
+
+            {/* Phase 04 */}
+            <div className="space-y-4">
+              <div className="text-4xl font-bold text-primary/60">04</div>
+              <h3 className="font-serif text-2xl font-semibold">The Dream Outcome</h3>
+              <p className="text-xl font-medium text-primary">Purpose Emerges</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Purpose emerges naturally. Life feels aligned, alive, meaningful, inspired.
+              </p>
+            </div>
+          </div>
+
+          {/* Journey progression labels */}
+          <div className="mt-16 flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+            <span>Confusion</span>
+            <span>→</span>
+            <span>Awareness</span>
+            <span>→</span>
+            <span>Expression</span>
+            <span>→</span>
+            <span>Embodiment</span>
+            <span>→</span>
+            <span className="font-semibold text-primary">Purpose</span>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <Hexagon className="mx-auto mb-6 h-16 w-16 text-primary" strokeWidth={1} />
-          <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl text-balance">
-            Ready to Plug Into the Field?
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground text-balance">
-            Join conscious creators who are being held in their expression, financially 
-            supported, and connected through a system that serves truth.
+      {/* The Guides Section */}
+      <section className="py-24 px-6 border-t border-border bg-card/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-lg text-muted-foreground mb-4">
+              Three guides united by a shared mission: to help you discover your purpose and live it fully.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12">
+            {/* Jon */}
+            <div className="space-y-4">
+              <div className="aspect-square rounded-2xl bg-muted/50 mb-6" />
+              <h3 className="font-serif text-2xl font-semibold">Jon</h3>
+              <p className="text-primary font-medium">Guide and Co-Founder</p>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                Jon's journey began in the depths of childhood trauma. Through radical ownership, something extraordinary opened—the intuitive sight of the Soul. Awakening cracked him wide open: he began experiencing heightened perception, and the ability to mirror the truth of a person's being with precision. His gift is illumination. Jon sees what others can't—or won't—see: the unconscious patterns and shadows that quietly limit a person's life. Those willing to step into his field experience profound clarity, liberation, and a direct encounter with themselves. He carries himself like a firebreathing dragon of truth: he is relentlessly honest and loving at the same time.
+              </p>
+            </div>
+
+            {/* Eric */}
+            <div className="space-y-4">
+              <div className="aspect-square rounded-2xl bg-muted/50 mb-6" />
+              <h3 className="font-serif text-2xl font-semibold">Eric</h3>
+              <p className="text-primary font-medium">CEO and Co-Founder</p>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                Eric's spiritual path began at 20 after a profound mystical awakening led him into 7 years of deep meditation and self-realization. Despite early corporate success, he felt unfulfilled... and three years of chronic, full body, eczema and psoriasis became the catalyst for a deep initiation. Through radical expression and the guidance of the Holy Spirit, Eric realized his symptoms were messages calling him back into alignment. As he healed, he surrendered his old life, leaving behind every dollar and possession, and committed himself fully to service. Today, Eric helps high performers reconnect with their soul, express their truth, and live their purpose.
+              </p>
+            </div>
+
+            {/* Camden */}
+            <div className="space-y-4">
+              <div className="aspect-square rounded-2xl bg-muted/50 mb-6" />
+              <h3 className="font-serif text-2xl font-semibold">Camden</h3>
+              <p className="text-primary font-medium">Clarity Architect and Co-Founder</p>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                Camden is relentlessly curious and unafraid to burn it all down for truth. After chasing meaning through knowledge and self-improvement, he chose devotion — trusting that love and God are the only things that actually satisfy.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-16 text-center max-w-3xl mx-auto">
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              We want to give love and receive love... and our ultimate way of doing that is to offer clarity and wisdom so you can practically do so yourself, and never deviate from YOUR soul's calling:
+            </p>
+            <p className="text-xl font-medium mt-6">
+              And together we can go deeper than ever
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-24 px-6 border-t border-border">
+        <div className="max-w-3xl mx-auto text-center space-y-8">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-balance">
+            The version of you who has already won in all aspects of life is waiting on the other side of this conversation.
           </p>
-          <div className="mt-8">
-            <Link href="/portal">
-              <Button size="lg" className="h-14 rounded-xl px-10 text-base">
-                Enter the Collective
-                <ArrowRight className="ml-2 h-5 w-5" />
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" className="h-14 px-8 text-base rounded-xl min-w-[220px]">
+              Start Your Transformation
+            </Button>
+            <Link href="/matrix">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="h-14 px-8 text-base rounded-xl min-w-[220px] bg-transparent border-primary/50 hover:bg-primary/10"
+              >
+                EXIT MATRIX
               </Button>
             </Link>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Experience the unified field in action
-          </p>
+
+          <div className="pt-8 text-sm text-muted-foreground">
+            <p>Eric: +1-630-344-3424</p>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card/50 py-12">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <div className="flex items-center gap-3">
-              <Hexagon className="h-6 w-6 text-primary" strokeWidth={1.5} />
-              <span className="font-serif text-lg font-medium text-foreground">
-                The Purpose Initiation
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              A unified field for conscious creators.
-            </p>
-          </div>
+      <footer className="border-t border-border py-8 px-6">
+        <div className="max-w-6xl mx-auto text-center text-sm text-muted-foreground">
+          <p>© Christic Fire LLC. All rights reserved.</p>
         </div>
       </footer>
     </div>
