@@ -50,13 +50,8 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost" className="h-11 rounded-xl px-5">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/auth/initiate">
-              <Button className="h-11 rounded-xl px-5">Begin</Button>
+            <Link href="/portal">
+              <Button className="h-11 rounded-xl px-6">Enter the Collective</Button>
             </Link>
           </div>
         </nav>
@@ -80,9 +75,9 @@ export default function LandingPage() {
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/auth/initiate">
+            <Link href="/portal">
               <Button size="lg" className="h-14 w-full rounded-xl px-8 text-base sm:w-auto">
-                Begin Your Initiation
+                Enter the Collective
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -246,9 +241,9 @@ export default function LandingPage() {
                 ))}
               </ul>
               <div className="mt-8">
-                <Link href="/auth/initiate">
+                <Link href="/portal">
                   <Button className="h-12 rounded-xl px-6">
-                    Create Your Space
+                    Explore Spaces
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -280,15 +275,15 @@ export default function LandingPage() {
             supported, and connected through a system that serves truth.
           </p>
           <div className="mt-8">
-            <Link href="/auth/initiate">
+            <Link href="/portal">
               <Button size="lg" className="h-14 rounded-xl px-10 text-base">
-                Begin Your Initiation
+                Enter the Collective
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
-            Free tier available. No credit card required.
+            Experience the unified field in action
           </p>
         </div>
       </section>

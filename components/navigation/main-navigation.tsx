@@ -162,62 +162,18 @@ export function MainNavigation({
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Help */}
+            {/* Home button */}
             <Button
               variant="ghost"
-              size="icon"
-              className="hidden sm:flex min-w-[44px] min-h-[44px]"
+              size="default"
+              className="hidden sm:flex min-h-[44px] rounded-xl"
+              asChild
             >
-              <HelpCircle className="w-5 h-5" />
-              <span className="sr-only">Help</span>
+              <a href="/">
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </a>
             </Button>
-
-            {/* User Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-11 w-11 rounded-full"
-                >
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src="/placeholder.svg" alt="User avatar" />
-                    <AvatarFallback className="bg-primary/20 text-primary font-medium">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center gap-3 p-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src="/placeholder.svg" alt="User avatar" />
-                    <AvatarFallback className="bg-primary/20 text-primary font-medium">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-foreground">
-                      Jordan Davis
-                    </span>
-                    <span className="text-xs text-muted-foreground">Creator Tier</span>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="min-h-[44px]">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>My Space</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="min-h-[44px]">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="min-h-[44px] text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
 
             {/* Mobile Menu Toggle */}
             <Button
