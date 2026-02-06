@@ -43,10 +43,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" suppressHydrationWarning>
+    <html lang="en" className="light bg-background">
       <body
         className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}
-        style={{ backgroundColor: '#faf8f5', color: '#1a1816' }}
       >
         {children}
         <Analytics />

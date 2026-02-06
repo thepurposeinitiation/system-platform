@@ -3,11 +3,9 @@ import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#faf8f5', color: '#1a1816' }}>
+    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
       {/* Subtle gradient background */}
-      <div className="absolute inset-0 -z-10" style={{ 
-        background: 'linear-gradient(to bottom, #faf8f5, #faf8f5, rgba(230, 225, 215, 0.2))' 
-      }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/20 -z-10" />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-12">
